@@ -18,8 +18,10 @@ void _imgui_create_fonts_texture(VkCommandBuffer buf, void *)
     ImGui_ImplVulkan_CreateFontsTexture(buf);
 }
 
-void ui::init(mg::context *ctx)
+void ui::init(mg::window *window)
 {
+    mg::context *ctx = window->context;
+
     VkDescriptorPoolSize pool_sizes[] =
     {
         { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
@@ -52,10 +54,10 @@ void ui::init(mg::context *ctx)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 #if defined MG_USE_SDL
-    ImGui_ImplSDL2_InitForVulkan(ctx->window);
+    ImGui_ImplSDL2_InitForVulkan(window->handle);
 #elif defined MG_USE_GLFW
     // we hook events later
-    ImGui_ImplGlfw_InitForVulkan(ctx->window, false);
+    ImGui_ImplGlfw_InitForVulkan(window->handle, false);
 #endif
 
     ImGui_ImplVulkan_InitInfo init_info = {};
@@ -75,8 +77,10 @@ void ui::init(mg::context *ctx)
     ImGui_ImplVulkan_DestroyFontUploadObjects();
 }
 
-void ui::exit(mg::context *ctx)
+void ui::exit(mg::window *window)
 {
+    mg::context *ctx = window->context;
+
     vkDeviceWaitIdle(ctx->device);
     ImGui_ImplVulkan_Shutdown();
 #if defined MG_USE_SDL
@@ -87,11 +91,12 @@ void ui::exit(mg::context *ctx)
     ImGui::DestroyContext();
 }
 
-void ui::new_frame(mg::context *ctx)
+void ui::new_frame(mg::window *window)
 {
     ImGui_ImplVulkan_NewFrame();
+
 #if defined MG_USE_SDL
-    ImGui_ImplSDL2_NewFrame(ctx->window);
+    ImGui_ImplSDL2_NewFrame(window->handle);
 #elif defined MG_USE_GLFW
     ImGui_ImplGlfw_NewFrame();
 #endif
@@ -105,7 +110,7 @@ void ui::end_frame()
 }
 
 #if defined MG_USE_SDL
-void _imgui_sdl_event_callback(mg::window * window, void *_e)
+void _imgui_sdl_event_callback(mg::window *window, void *_e)
 {
     SDL_Event *e = (SDL_Event*)_e;
     ImGui_ImplSDL2_ProcessEvent(e);
@@ -118,12 +123,14 @@ void ui::set_window_ui_callbacks(mg::window *window)
     mg::add_window_event_handler(::_imgui_sdl_event_callback);
     
 #elif defined MG_USE_GLFW
-    ImGui_ImplGlfw_InstallCallbacks(window);
+    ImGui_ImplGlfw_InstallCallbacks(window->handle);
 #endif
 }
 
-void ui::render(mg::context *ctx)
+void ui::render(mg::window *window)
 {
+    mg::context *ctx = window->context;
+
     mg::frame_data *frame = ctx->frames + ctx->current_frame;
     VkCommandBuffer buf = frame->command_buffers[ctx->current_image_index];
 

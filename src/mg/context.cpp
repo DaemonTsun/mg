@@ -57,7 +57,7 @@ void mg::create_vulkan_surface(context *ctx, mg::window *window)
     VkResult res = mg::create_vulkan_surface(window, ctx->instance, &ctx->target_surface);
 
     if (res != VK_SUCCESS)
-        throw_vk_error(res, "%p could not create vulkan surface for window %p", ctx, window);
+        throw_vk_error(res, "%p could not create vulkan surface for window %p with handle %p", ctx, window, window->handle);
 }
 
 void mg::setup_window_context(context *ctx, mg::window *window)
@@ -164,7 +164,6 @@ void submit_frame_commands(mg::context *ctx, mg::frame_data *frame, u32 image_in
 void recreate_swapchain(mg::context *ctx)
 {
     vkDeviceWaitIdle(ctx->device);
-    
 
     mg::destroy_frame_data(ctx);
     mg::destroy_framebuffers(ctx);

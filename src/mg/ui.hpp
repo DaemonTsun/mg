@@ -13,14 +13,14 @@ namespace ui
 {
 using namespace ImGui;
 
-void init(mg::context *ctx);
-void exit(mg::context *ctx);
+void init(mg::window *window);
+void exit(mg::window *window);
 
 // just convenience
-void new_frame(mg::context *ctx);
+void new_frame(mg::window *window);
 void end_frame();
 
 void set_window_ui_callbacks(mg::window *window);
 
-void render(mg::context *ctx);
+void render(mg::window *window);
 }
