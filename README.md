@@ -55,3 +55,19 @@ $ cd bin
 $ cmake ..
 $ make
 ```
+
+## How to include
+
+Ideally use CMake, clone the repository or add it to your project as a submodule, then add the following to your CMakeLists.txt (adjust to the mg version youre using):
+
+```cmake
+add_subdirectory(path/to/mg)
+target_link_libraries(your-target PRIVATE mg-0.8)
+target_include_directories(your-target PRIVATE ${mg-0.8_SOURCES_DIR} path/to/mg/ext/imgui)
+```
+
+OR using [better-cmake](https://github.com/DaemonTsun/better-cmake), add the following to your targets external libs:
+
+```cmake
+LIB mg  0.8.0 "path/to/mg" INCLUDE LINK
+```
