@@ -4,16 +4,14 @@ if (NOT DEFINED WINDOW)
 endif()
 
 if (WINDOW STREQUAL "SDL")
-    add_compile_definitions(MG_USE_SDL)
 
     find_package(SDL2 REQUIRED)
     set(WINDOW_LIBRARIES "${SDL2_LIBRARIES}")
-    set(WINDOW_INCLUDE_DIRECTORIES "${SDL2_INCLUDE_DIRS}")
+    set(WINDOW_INCLUDE_DIRS "${SDL2_INCLUDE_DIRS}")
+    set(WINDOW_COMPILE_DEFINITIONS MG_USE_SDL)
 
 elseif (WINDOW STREQUAL "GLFW")
-    add_compile_definitions(MG_USE_GLFW)
-
-    set(GLFW_PATH "${ROOT}/ext/glfw")
+    set(GLFW_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw")
 
     set(GLFW_LIBRARY_TYPE STATIC)
     set(GLFW_BUILD_DOCS FALSE)
@@ -26,4 +24,5 @@ elseif (WINDOW STREQUAL "GLFW")
 
     set(WINDOW_LIBRARIES "${GLFW_LIBRARIES}")
     set(WINDOW_INCLUDE_DIRECTORIES "${GLFW_PATH}/include")
+    set(WINDOW_COMPILE_DEFINITIONS MG_USE_GLFW)
 endif()

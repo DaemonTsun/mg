@@ -31,6 +31,8 @@ add_lib(mg STATIC
         LIB shl 0.7.0 "${ROOT}/ext/shl" INCLUDE LINK GIT_SUBMODULE
     )
 
+target_compile_definitions(mg-0.8 PUBLIC ${WINDOW_COMPILE_DEFINITIONS})
+
 exit_if_included()
 
 set(shl_SOURCES_DIR "${shl-0.7.0_SOURCES_DIR}")

@@ -1,5 +1,5 @@
 
-set(imgui_SOURCES_DIR "${CMAKE_SOURCE_DIR}/ext/imgui/")
+set(imgui_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/imgui/")
 set(imgui_SOURCES 
     "${imgui_SOURCES_DIR}/imgui.h"
     "${imgui_SOURCES_DIR}/imgui.cpp"
