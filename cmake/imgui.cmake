@@ -18,4 +18,4 @@ elseif (WINDOW STREQUAL "GLFW")
     set(imgui_SOURCES ${imgui_SOURCES} "${imgui_SOURCES_DIR}/backends/imgui_impl_glfw.cpp")
 endif()
     
-set(imgui_INCLUDE_DIRECTORIES "${imgui_SOURCES_DIR}")
+set(imgui_INCLUDE_DIRS "${imgui_SOURCES_DIR}")
