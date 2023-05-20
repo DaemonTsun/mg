@@ -5,6 +5,7 @@ find_package(better REQUIRED NO_DEFAULT_PATH PATHS ../../ext/better-cmake/cmake/
 add_exe(ui_demo
     VERSION 1.0.0
     SOURCES_DIR "${ROOT}/src"
+    SOURCES "${imgui_SOURCES_DIR}/imgui_demo.cpp"
     CPP_VERSION 17
     CPP_WARNINGS ALL SANE FATAL
     LIBRARIES ${mg_TARGET}
