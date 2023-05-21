@@ -10,6 +10,7 @@
 #endif
 
 #include "mg/impl/context.hpp"
+#include "mg/impl/window.hpp"
 #include "mg/vk_error.hpp"
 #include "mg/ui.hpp"
 
@@ -120,7 +121,7 @@ void _imgui_sdl_event_callback(mg::window *window, void *_e)
 void ui::set_window_ui_callbacks(mg::window *window)
 {
 #if defined MG_USE_SDL
-    mg::add_window_event_handler(::_imgui_sdl_event_callback);
+    mg::add_window_event_handler(window, ::_imgui_sdl_event_callback);
     
 #elif defined MG_USE_GLFW
     ImGui_ImplGlfw_InstallCallbacks(window->handle);
