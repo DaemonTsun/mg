@@ -11,16 +11,16 @@ struct context;
 
 namespace ui
 {
-using namespace ImGui;
-
 void init(mg::window *window);
 void exit(mg::window *window);
-
-// just convenience
-void new_frame(mg::window *window);
-void end_frame();
 
 void set_window_ui_callbacks(mg::window *window);
 
 void render(mg::window *window);
+
+// ImGui functions
+void new_frame(mg::window *window);
+void end_frame();
+
+void set_next_window_full_size();
 }

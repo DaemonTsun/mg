@@ -92,24 +92,6 @@ void ui::exit(mg::window *window)
     ImGui::DestroyContext();
 }
 
-void ui::new_frame(mg::window *window)
-{
-    ImGui_ImplVulkan_NewFrame();
-
-#if defined MG_USE_SDL
-    ImGui_ImplSDL2_NewFrame(window->handle);
-#elif defined MG_USE_GLFW
-    ImGui_ImplGlfw_NewFrame();
-#endif
-
-    ImGui::NewFrame();
-}
-
-void ui::end_frame()
-{
-    ImGui::EndFrame();
-}
-
 #if defined MG_USE_SDL
 void _imgui_sdl_event_callback(mg::window *window, void *_e)
 {
@@ -137,4 +119,35 @@ void ui::render(mg::window *window)
 
     ImGui::Render();
     ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), buf);
+}
+
+void ui::new_frame(mg::window *window)
+{
+    ImGui_ImplVulkan_NewFrame();
+
+#if defined MG_USE_SDL
+    ImGui_ImplSDL2_NewFrame(window->handle);
+#elif defined MG_USE_GLFW
+    ImGui_ImplGlfw_NewFrame();
+#endif
+
+    ImGui::NewFrame();
+}
+
+void ui::end_frame()
+{
+    ImGui::EndFrame();
+}
+
+void ui::set_next_window_full_size()
+{
+#ifdef IMGUI_HAS_VIEWPORT
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->GetWorkPos());
+    ImGui::SetNextWindowSize(viewport->GetWorkSize());
+    ImGui::SetNextWindowViewport(viewport->ID);
+#else 
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+#endif
 }
