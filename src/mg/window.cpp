@@ -19,6 +19,8 @@
 #include "mg/ui.hpp"
 #include "mg/impl/window.hpp"
 
+#include <stdio.h>
+
 #if defined MG_USE_GLFW
 void _glfw_window_resize_callback(mg::window_handle *handle, int width, int height)
 {

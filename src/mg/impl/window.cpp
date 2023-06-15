@@ -177,8 +177,7 @@ void _poll_SDL_events(mg::window *window, bool *quit)
 
     case SDL_WINDOWEVENT:
     {
-        if (conf->resize.timeout > 0
-         && e.window.event == SDL_WINDOWEVENT_RESIZED)
+        if (e.window.event == SDL_WINDOWEVENT_RESIZED)
         {
             conf->resize.resizing = true;
             conf->resize.time_left = conf->resize.timeout;
