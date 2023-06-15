@@ -61,6 +61,21 @@ void mg::create_window(mg::window *out, const char *title, int width, int height
     ui::set_window_ui_callbacks(out);
 }
 
+void mg::close_window(mg::window *window)
+{
+    assert(window != nullptr);
+
+#if defined MG_USE_SDL
+    SDL_Event e;
+    e.quit.type = SDL_QUIT;
+    e.quit.timestamp = SDL_GetTicks();
+
+    SDL_PushEvent(&e);
+#elif defined MG_USE_GLFW
+    glfwSetWindowShouldClose(window->handle, GLFW_TRUE);
+#endif
+}
+
 void mg::destroy_window(mg::window *window)
 {
     assert(window != nullptr);

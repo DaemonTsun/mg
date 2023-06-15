@@ -38,6 +38,7 @@ struct window
 };
 
 void create_window(mg::window *out, const char *title, int width, int height);
+void close_window(mg::window *window);
 void destroy_window(mg::window *window);
 
 void get_window_size(mg::window *window, int *width, int *height);
