@@ -1,5 +1,11 @@
 
 set(imgui_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/imgui/")
+
+if (NOT EXISTS "${imgui_SOURCES_DIR}/imgui.h")
+    execute_process(COMMAND git submodule update --init "${imgui_SOURCES_DIR}"
+                    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+endif()
+
 set(imgui_SOURCES 
     "${imgui_SOURCES_DIR}/imgui.h"
     "${imgui_SOURCES_DIR}/imgui.cpp"

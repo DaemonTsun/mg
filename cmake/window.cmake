@@ -12,6 +12,10 @@ if (WINDOW STREQUAL "SDL")
 
 elseif (WINDOW STREQUAL "GLFW")
     set(GLFW_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw")
+    if (NOT EXISTS "${GLFW_PATH}/CMakeLists.txt")
+        execute_process(COMMAND git submodule update --init "${GLFW_PATH}"
+                        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    endif()
 
     set(GLFW_LIBRARY_TYPE STATIC)
     set(GLFW_BUILD_DOCS FALSE)
