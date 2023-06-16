@@ -143,8 +143,8 @@ void ui::set_next_window_full_size()
 {
 #ifdef IMGUI_HAS_VIEWPORT
     ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(viewport->GetWorkPos());
-    ImGui::SetNextWindowSize(viewport->GetWorkSize());
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
     ImGui::SetNextWindowViewport(viewport->ID);
 #else 
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
