@@ -14,6 +14,7 @@ namespace ui
 void init(mg::window *window);
 void exit(mg::window *window);
 
+void upload_fonts(mg::window *window);
 void set_window_ui_callbacks(mg::window *window);
 
 void render(mg::window *window);
