@@ -72,10 +72,6 @@ void ui::init(mg::window *window)
     init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
     ImGui_ImplVulkan_Init(&init_info, ctx->render_pass);
-
-    // upload fonts, then delete them from cpu
-    mg::submit_immediate_vulkan_command_to_current_frame(ctx, ::_imgui_create_fonts_texture, nullptr);
-    ImGui_ImplVulkan_DestroyFontUploadObjects();
 }
 
 void ui::exit(mg::window *window)
@@ -90,6 +86,14 @@ void ui::exit(mg::window *window)
     ImGui_ImplGlfw_Shutdown();
 #endif
     ImGui::DestroyContext();
+}
+
+void ui::upload_fonts(mg::window *window)
+{
+    mg::context *ctx = window->context;
+    // upload fonts, then delete them from cpu
+    mg::submit_immediate_vulkan_command_to_current_frame(ctx, ::_imgui_create_fonts_texture, nullptr);
+    ImGui_ImplVulkan_DestroyFontUploadObjects();
 }
 
 #if defined MG_USE_SDL
