@@ -44,6 +44,8 @@ void destroy_window(mg::window *window);
 void get_window_size(mg::window *window, int *width, int *height);
 void set_window_size(mg::window *window, int  width, int  height);
 
+float get_window_scaling(mg::window *window);
+
 typedef void (*event_loop_update_callback)(mg::window *, double);
 typedef void (*event_loop_render_callback)(mg::window *, double);
 
