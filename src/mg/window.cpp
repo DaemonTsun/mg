@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "shl/compare.hpp"
 #include "shl/time.hpp"
 
 #if defined MG_USE_SDL
@@ -119,6 +120,38 @@ void mg::set_window_size(mg::window *window, int width, int height)
 #elif defined MG_USE_GLFW
     glfwSetWindowSize(window->handle, width, height);
 #endif
+}
+
+float mg::get_window_scaling(mg::window *window)
+{
+    assert(window != nullptr);
+    assert(window->handle != nullptr);
+
+#if defined MG_USE_SDL
+    float default_dpi = 96.0f;
+
+    int display = SDL_GetWindowDisplayIndex(window->handle);
+    
+    if (display < 0)
+        return 1.f;
+
+    float dpi;
+    
+    if (SDL_GetDisplayDPI(display, nullptr, &dpi, nullptr) < 0)
+        return 1.f;
+
+    return dpi / default_dpi;
+    
+#elif defined MG_USE_GLFW
+    float sx;
+    float sy;
+    glfwGetWindowContentScale(window->handle, &sx, &sy);
+
+    return Max(sx, sy);
+
+#endif
+
+    return 1.f;
 }
 
 void mg::default_render_function(mg::window *window, double dt)
