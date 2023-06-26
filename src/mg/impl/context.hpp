@@ -121,6 +121,8 @@ struct context
     array<VkImageView> swapchain_image_views;
     array<VkFence> swapchain_image_fences;
 
+    array<VkSwapchainKHR> swapchains_to_delete;
+
     VkRenderPass render_pass;
     u32 current_image_index; // used in between start_rendering and end_rendering
 
@@ -167,6 +169,7 @@ void destroy_render_pass(mg::context *ctx);
 void destroy_depth_buffers(mg::context *ctx);
 void destroy_swapchain_image_views(mg::context *ctx);
 void destroy_swapchain(mg::context *ctx);
+void destroy_old_swapchains(mg::context *ctx);
 void destroy_target_surface(mg::context *ctx);
 void destroy_descriptor_pool_manager(mg::context *ctx);
 void destroy_memory_manager(mg::context *ctx);
