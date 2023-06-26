@@ -98,6 +98,7 @@ void mg::init(mg::context *ctx)
     ::init(&ctx->swapchain_images);
     ::init(&ctx->swapchain_image_views);
     ::init(&ctx->swapchain_image_fences);
+    ::init(&ctx->swapchains_to_delete);
 
     ctx->render_pass = nullptr;
 
@@ -414,7 +415,7 @@ bool is_surface_format_supported(mg::context *ctx)
     trace("surface supports %u formats:\n", formatCount);
     
     for (u32 i = 0; i < formatCount; ++i)
-        trace("  %u: format = %u, colorspace = %u", i, formats[i].format, formats[i].colorSpace);
+        trace("  %u: format = %u, colorspace = %u\n", i, formats[i].format, formats[i].colorSpace);
 #endif // NDEBUG
     
     // make sure settings are supported
@@ -697,8 +698,8 @@ void mg::create_logical_device(mg::context *ctx, const array<const_string> *laye
     assert(device_property_names.size == ctx->config.device_extension_names.size);
     
 #ifdef TRACE
-    for (const char *dpn : device_property_names)
-        trace("applying extension %s\n", dpn);
+    for_array(namep, &device_property_names)
+        trace("applying extension %s\n", *namep);
 #endif
 
     VkDeviceQueueCreateInfo queue_create_infos[2];
@@ -808,11 +809,18 @@ void mg::create_swapchain(mg::context *ctx)
     createInfo.oldSwapchain = ctx->swapchain;
 
     VkResult res = vkCreateSwapchainKHR(ctx->device, &createInfo, nullptr, &ctx->swapchain);
-    
+
     if (res != VK_SUCCESS)
         throw_vk_error(res, "%p failed to create swap chain", ctx);
+
+    if (createInfo.oldSwapchain != ctx->swapchain
+     && createInfo.oldSwapchain != nullptr)
+    {
+        trace("marking old swapchain for deletion %p\n", createInfo.oldSwapchain);
+        ::add_at_end(&ctx->swapchains_to_delete, createInfo.oldSwapchain);
+    }
     
-    trace("swapchain created successfully\n");
+    trace("swapchain created successfully %p\n", ctx->swapchain);
 }
 
 void mg::set_swapchain_images(mg::context *ctx)
@@ -1075,7 +1083,7 @@ void mg::destroy_swapchain_image_views(mg::context *ctx)
 
 void mg::destroy_swapchain(mg::context *ctx)
 {
-    trace("destroying swapchain\n");
+    trace("destroying swapchain %p\n", ctx->swapchain);
     assert(ctx->device != nullptr);
     
     if (ctx->swapchain == nullptr)
@@ -1083,6 +1091,17 @@ void mg::destroy_swapchain(mg::context *ctx)
     
     vkDestroySwapchainKHR(ctx->device, ctx->swapchain, nullptr);
     ctx->swapchain = nullptr;
+}
+
+void mg::destroy_old_swapchains(mg::context *ctx)
+{
+    trace("destroying old swapchains\n");
+    assert(ctx->device != nullptr);
+
+    for_array(scp, &ctx->swapchains_to_delete)
+        vkDestroySwapchainKHR(ctx->device, *scp, nullptr);
+
+    ::clear(&ctx->swapchains_to_delete);
 }
 
 void mg::destroy_target_surface(mg::context *ctx)
@@ -1147,6 +1166,7 @@ void mg::free(mg::context *ctx)
     destroy_render_pass(ctx);
     destroy_swapchain_image_views(ctx);
     destroy_swapchain(ctx);
+    destroy_old_swapchains(ctx);
     ::clear(&ctx->swapchain_images);
     destroy_target_surface(ctx);
     clear_queued_buffers(ctx);
@@ -1161,6 +1181,7 @@ void mg::free(mg::context *ctx)
     ::free(&ctx->swapchain_images);
     ::free(&ctx->swapchain_image_views);
     ::free(&ctx->swapchain_image_fences);
+    ::free(&ctx->swapchains_to_delete);
 
     ::free(&ctx->framebuffers);
 

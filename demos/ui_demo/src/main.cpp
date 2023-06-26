@@ -16,6 +16,7 @@ int main(int argc, const char *argv[])
 {
     mg::window window;
     mg::create_window(&window, DEMO_NAME, window_width, window_height);
+    ui::upload_fonts(&window);
 
     mg::event_loop(&window, ::update);
 
